@@ -6,5 +6,5 @@ All C# scripts shown here were created from scratch within Unity, however the AI
 
 ### **AIPathfinding.cs**
 
-void Start() (Lines 41-59) - When the AIPathfinding script starts, 
+void Start() (Lines 41-59) - When the AIPathfinding script starts, an initial scan for a grid-graph overlay of walkable and non-walkable nodes to aid pathfinding is executed. The path calculation is then started based on the generated grid-graph and the seeker (the target of the path) to determine if a viable route to the target is possible. Variables are also assigned here for the offset positions of sensors that surround the character to detect terrain for automated movement and assigning a variable to represent the PlayerCharacter GameObject 
 
