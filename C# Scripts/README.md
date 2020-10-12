@@ -1,2 +1,6 @@
 # Cube-Run-MSc-Dissertation-Project
-This repository contains both the C# scripts, written report and automated level testing results for my MSc Advanced Software Engineering dissertation project. This README file gives more detail on the code sections and development process. 
+This file contains all 10 C# scripts for my MSc Advanced Software Engineering dissertation project. This README file gives more detail on the code sections and development process. 
+
+#Script Descriptions
+AIPathfinding.cs
+
