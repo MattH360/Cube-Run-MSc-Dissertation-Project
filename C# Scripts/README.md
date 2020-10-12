@@ -6,7 +6,15 @@ All C# scripts shown here were created from scratch within Unity, however the AI
 
 ### **AIPathfinding.cs**
 
-**void Start() (Lines 41-59)**
+**Start() (Lines 41-59)**
 
 When the AIPathfinding script starts, an initial scan for a grid-graph overlay of walkable and non-walkable nodes to aid pathfinding is executed. The path calculation is then started based on the generated grid-graph and the seeker (the target of the path) to determine if a viable route to the target is possible. Variables are also assigned here for the offset positions of sensors that surround the character to detect terrain for automated movement and assigning a variable to represent the PlayerCharacter GameObject for component use.
+
+**OnPathComplete() (Lines 61-70)**
+
+Runs after the pathfinding calculation has started and sets the currentWaypoint counter to zero so that the current waypoint is set as the start of the path.
+
+**CheckObstruction() (Lines 72-96)**
+
+Sets a LayerMask for each of the terrain sensors to detect colliders on all layers, except the layer of the player character to prevent interference with the characters own collider. Use raycasts to detect obstructions in front of the character both at character hight and incoming gaps below in the movement direction. Raycasts also detect and platfroms above the character (i.e. when under overhanging terrain) and diagonally upward to the right to detect the end of an overhang. OverlapCircles are used to check when the character is in contact with a platform (grounded) as they detect colliders in a wider area not just at the end of a ray. If the character is more than two tiles below the surface level, the check sensor for platforms above the character extends in case platforms are not directly above. The sensor cannot be extended on the surface level otherwise it would detect the colliders on the tiles of the level border.
 
