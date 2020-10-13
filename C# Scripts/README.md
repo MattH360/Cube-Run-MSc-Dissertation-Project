@@ -40,3 +40,19 @@ A public method accessed and executed by the TestMode.cs script when the test mo
 
 Called every fixed framerate frame, in line with the frequency of the physics system so that movement is framerate independed. Checks continuously for obstructions and character movement, resetting the level and updating the number of completed test runs if the character falls out of the level bounds.
 
+### **CameraFollow.cs**
+
+**Start() (Lines 19-22)**
+
+Access the transform of the PlayerCharacter GameObject with a variable. Using the PlayerCharacter transform allows the camera to be placed initially at the position of the player and follow the player as it moves.
+
+**LateUpdate() (Lines 25-36)**
+
+Called after all other update methods and so ensures the character has finished moving. The camera position is continuously updated to the position of the character and clamped to ensure that it does not move upward when the character jumps. This prevents any area outside of the playable level being visible by the in-game camera. The camera moves when the character passes the centre of the camera view.
+
+### **EndLevelTrigger.cs**
+
+**Awake() (Lines 17-32)**
+This method executes as soon as the script is run (before the Start method) and accesses GameObjects for later use in addition to using a singleton pattern to ensure persistence by deleting any new Endpoint instance created when a new level is generated.
+
+
