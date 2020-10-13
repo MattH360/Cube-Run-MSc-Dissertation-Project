@@ -38,5 +38,5 @@ A public method accessed and executed by the TestMode.cs script when the test mo
 
 **FixedUpdate() (Lines 201-210)**
 
-Called every fixed framerate frame, in line with the frequency of the physics system so that movement is framerate independed. Checks continuously for obstructions and character movement, resetting the level if the character falls out of the level bounds.
+Called every fixed framerate frame, in line with the frequency of the physics system so that movement is framerate independed. Checks continuously for obstructions and character movement, resetting the level and updating the number of completed test runs if the character falls out of the level bounds.
 
