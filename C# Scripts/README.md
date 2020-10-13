@@ -60,7 +60,17 @@ This method executes as soon as the script is run (before the Start method) and 
 
 Executed after the Awake() method to set BoxCollider2D on the EndPoint GameObject as a trigger to reset the level when the player enters or touches the box collider.
 
-**OnTriggerEnter2D()**
+**OnTriggerEnter2D() (Lines 40-49)**
 
 A method executed automatically when a collider (in this case the character collider) enters the trigger area. This method also prevents the timer on the LevelCanvas GameObject (the timer on the games UI) from being destroyed when the level is restarted (using the DontDestroyOnLoad() Unity method), allowing the survival time to persist to the next level. The new zero timer created when the level restarts is quickly deleted by the Awake() method to prevent interference. While test mode is enabled, if the automated character reaches the trigger at the end of the level the counter for completed tests is increased and a new level is loaded.
+
+### **LevelBackground.cs**
+
+**Start() (Lines 16-19)**
+
+Runs the CreateBackground method each time the script is run (when a new level is generated) to produce the white background for the level.
+
+**CreateBackground() (Lines 21-42)**
+
+Add white background tiles with no colliders onto a separate tilemap and Unity layer than the platform tiles. This allows the grid-graph layermask for the pathfinding to more easily generate the walkable and non-walkable nodes as only one layer can be selected. The same dimensions used in the LevelGenerator.cs script for the playform tile layer are used here to ensure the white background is of the same size and shape. The position of every tile on the tilemap is iterated through and set to a white background tile. The platform tilemap then sits on top of this layer to create the full level.
 
