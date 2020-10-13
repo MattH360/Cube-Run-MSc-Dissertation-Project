@@ -20,4 +20,23 @@ Sets a LayerMask for each of the terrain sensors to detect colliders on all laye
 
 **AIMove() (Lines 98-158)**
 
-If there is no path found or the end of the path is reached the method returns and the character will not move. Determine the direction of and distance to the next waypoint along the path. Using the range of sensors created in the CheckObstruction() method,the character moves in the x component direction of the generated path (to the right across the screen) until an obstruction or incoming gap is detected, causing the character to automatically jump if it is currently in contact with a platform tile (i.e. jump is enabled). As a human player can move left and right in the air to more accurately land on a platform, this mechanic was added as an option for the automated character. After the character reached the peak (maximum jump height) of a jump, a raycast is emitted and if a platform is detected below the velocity of the character is reduced causing a slowing effect visible when watching the automated playthrough. This intentional slowing allows the character to fall more accurately directly downward onto the platform (simulating the movement a human player could make).
+If there is no path found or the end of the path is reached the method returns and the character will not move. Determine the direction of and distance to the next waypoint along the path. Using the range of sensors created in the CheckObstruction() method,the character moves in the x component direction of the generated path (to the right across the screen) until an obstruction or incoming gap is detected, causing the character to automatically jump if it is currently in contact with a platform tile (i.e. jump is enabled). As a human player can move left and right in the air to more accurately land on a platform, this mechanic was added as an option for the automated character. After the character reached the peak (maximum jump height) of a jump, a raycast is emitted and if a platform is detected below the velocity of the character is reduced causing a slowing effect visible when watching the automated playthrough. This intentional slowing allows the character to fall more accurately directly downward onto the platform (simulating the movement a human player could make). In an attempt to prevent the character becoming stuck under overhanging terrain, if the checkT raycast detects platforms above, the character attempts to move backward (to the left) which is likely back towards the enterance as the character continuously moves to the right. At the point when checkT (cast from the middle of the character) and checkUR (cast from the top right hand corner) detect that the player is fully out from under the overhang (there are no obstructions above) and checkDiag detects that the end tile of the overhang is diagonally upward to the right, the character can jump back to the surface level unobstructed (and engage movement to the right to land on the surface level at the peak of the jump). Each time a given waypoint alont the path is reached the currentWaypoint counter is inceased until the end of the route.
+
+NOTE: Due to the randomised complexity of the generated terrain the automated character can still struggle with some terrain features, resulting in level failure.
+
+**OnDrawGizmos() (Lines 160-181)** 
+
+This method runs automatically to generate the visual representation of raycasts and overlapCircles in the Unity scene view. The gizmos are given the same dimensions and positions as the invisible sensors running in the game to accurately represent the same interactions. The extension of the checkT raycast is also represented.
+
+**RecalculatePath() (Lines 184-192)**
+
+This method is a public coroutine that acts similarly to a normal method but allows for delayed execution in this case by an interval of realtime seconds. The method is public as it is accessed by and executed within the persistent PlayerSetup.cs script when the test mode is activated. A new path is generated after every interval so that the pathfinding is constantly updating to detect the most direct route (often straight accross the surface level).
+
+**DisableCoroutines() (Lines 194-197)**
+
+A public method accessed and executed by the TestMode.cs script when the test mode is deactivated. Simply stops all running coroutines as the coroutines are only used during testing and deactivation returns control to the human player.
+
+**FixedUpdate() (Lines 201-210)**
+
+Called every fixed framerate frame, in line with the frequency of the physics system so that movement is framerate independed. Checks continuously for obstructions and character movement, resetting the level if the character falls out of the level bounds.
+
