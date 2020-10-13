@@ -74,3 +74,22 @@ Runs the CreateBackground method each time the script is run (when a new level i
 
 Add white background tiles with no colliders onto a separate tilemap and Unity layer than the platform tiles. This allows the grid-graph layermask for the pathfinding to more easily generate the walkable and non-walkable nodes as only one layer can be selected. The same dimensions used in the LevelGenerator.cs script for the playform tile layer are used here to ensure the white background is of the same size and shape. The position of every tile on the tilemap is iterated through and set to a white background tile. The platform tilemap then sits on top of this layer to create the full level.
 
+### **LevelGenerator.cs**
+
+**Awake() (Lines 30-35)**
+
+Runs before the Start() method and accesses the PlayerCharacter GameObject, spawns the player in the starting location and executes the CreateLevel() method to create a level of randomised 1's and 0's to later represent platform tiles and blank spaces respectively (blank spaces become white background cells as the background layer shows through).
+
+**Start() (Lines 38-47)**
+
+Adds platform tiles to the 1 positions to create an interactable tilemap with the CreateTileMap() method. Runs the pathfinding grid-graph scan each time a new level is created and the test mode is active as the scan on the AIPathfinding.cs script only runs once due to persistence so another scan was needed that would run for each new level.
+
+**CreateLevel() (Lines 49-82)**
+
+Creates a levelGrid array to define the fixed dimensions of the level, a border of one tile width is placed along the left, right and top of the level to prevent the player from falling off the sides and giving a sense of direction from the starting point so that the player instinctively knows to move to the right. The bottom half of the level is filled randomly with 1's and 0's. This produces the initial starting state of the level.
+
+**CreateTileMap() (Lines 84-113)**
+
+The LevelTilemap GameObject is accessed and used to apply a static Rigidbody2D to prevent movement of the tilemap. A TilemapCollider2D is also added and set to be used by a CompositeCollider2D so that each connected platform cell acts as a single collider (also helps with raycast detection by preventing multiple collider edges along platforms). If the levelGrid array is not empty (i.e. the CreateLevel() method has run) then each cell in the level is iterated through and a platform tile is placed if the position in the levelGrid contains a 1. This produces a complete tilemap of the initial level starting state and a set of Cellular Automata rules can then be generated and applied to alter the terrain with procedural generation using the ApplyCARules() method.
+
+
