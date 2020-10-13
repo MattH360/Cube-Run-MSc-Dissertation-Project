@@ -53,6 +53,14 @@ Called after all other update methods and so ensures the character has finished 
 ### **EndLevelTrigger.cs**
 
 **Awake() (Lines 17-32)**
+
 This method executes as soon as the script is run (before the Start method) and accesses GameObjects for later use in addition to using a singleton pattern to ensure persistence by deleting any new Endpoint instance created when a new level is generated.
 
+**Start() (Lines 34-38)**
+
+Executed after the Awake() method to set BoxCollider2D on the EndPoint GameObject as a trigger to reset the level when the player enters or touches the box collider.
+
+**OnTriggerEnter2D()**
+
+A method executed automatically when a collider (in this case the character collider) enters the trigger area. This method also prevents the timer on the LevelCanvas GameObject (the timer on the games UI) from being destroyed when the level is restarted (using the DontDestroyOnLoad() Unity method), allowing the survival time to persist to the next level. The new zero timer created when the level restarts is quickly deleted by the Awake() method to prevent interference. While test mode is enabled, if the automated character reaches the trigger at the end of the level the counter for completed tests is increased and a new level is loaded.
 
