@@ -4,6 +4,8 @@ This file contains all 10 C# scripts for my MSc Advanced Software Engineering di
 ## **Script Descriptions**
 All C# scripts shown here were created from scratch within Unity, however the AIPathfinding.cs script does utilise two scripts from the AStar Pathfinding Project package (https://arongranberg.com/astar/) for the purpose of implementing the AStar pathfinding algorithm as the creation of a pathfinding algorithm was outside of the requirements for the project since generation of Cellular Automata rules had been implemented. Minor sections for the setup of the Astar Pathfinding Project package were also based on the Brackeys 2D Pathfinding Tutorial (https://www.youtube.com/watch?v=jvtFUfJ6CP8) and are noted in the AIPathfinding.cs script.
 
+**NOTE:** Some changes have been made to the scripts in an attempt to further reduce the inclusion of any duplicate cells within CA rules and to add some further improvents to the automated character movement. These however are not present in the project report and are not reflected in the test data. 
+
 ### **AIPathfinding.cs**
 
 **Start() (Lines 41-59)**
@@ -91,5 +93,9 @@ Creates a levelGrid array to define the fixed dimensions of the level, a border 
 **CreateTileMap() (Lines 84-113)**
 
 The LevelTilemap GameObject is accessed and used to apply a static Rigidbody2D to prevent movement of the tilemap. A TilemapCollider2D is also added and set to be used by a CompositeCollider2D so that each connected platform cell acts as a single collider (also helps with raycast detection by preventing multiple collider edges along platforms). If the levelGrid array is not empty (i.e. the CreateLevel() method has run) then each cell in the level is iterated through and a platform tile is placed if the position in the levelGrid contains a 1. This produces a complete tilemap of the initial level starting state and a set of Cellular Automata rules can then be generated and applied to alter the terrain with procedural generation using the ApplyCARules() method.
+
+**ApplyCARules() (Lines 116-241)**
+
+The number of level iterations created by a single ruleset before generating a new set of rules is determined by the switchRuleCount variable stored in the persistent PlayerSetup.cs script. The variable is increased each time a level is generated until reaching the value maxTests (the maximum number of tests to be completed before changing the ruleset, 100 tests per set at the time of the dissertation project). A three-dimensional jagged array was used to represent each ruleset of 10 rules each containing at random 0-8 potential cells, with each cell represented as an x and y coordinate within a 3x3 Moore Neighbourhood grid surrounding a centre target cell. An additional jagged array of the same dimensions was used to store the generated ruleset in the PlayerSetup.cs script for use with multiple test iterations. The x and y coordinates for each cell within a rule were also selected at random and must not include the target cell [1,1] or any duplicate cells within therule. In an attempt to prevent this cells were checked and randomised again if any matches were found. After the first creation of a ruleset the stored set was loaded for each test.  
 
 
