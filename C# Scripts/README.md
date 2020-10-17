@@ -124,4 +124,34 @@ A simple method to translate user input from key presses to x-axis movement, the
 
 Enables the character to jump when in contact with a platform and the spacebar key is pressed. GetKeyDown only returns true when the key is pressed (holding the key has no effect) it is used to prevent continuous upward jumping movement if the spacebar is held down. GetKey used for horizontal movement allows the player to hold the arrow keys for continuous movement.
 
+**CheckGround() (Lines 64-73)**
+
+Uses an OverlapCircle sensor to check for any colliders below the character (i.e. the character is in contact with a platforms) and checks every layer except the character layer so that the collider of the character does not interfere. The sensor is placed at the previously defined offset position at the bottom of the character, when in contact with a platform, jump is enabled.
+
+**OnDrawGizmos() (Lines 75-81)**
+
+Provides a visual representation of the CheckGround() OverlapCircle sensor that is visible in the scene view for debugging purposes.
+
+**RestartLevel() (Lines 84-98)**
+
+This method is public and is used both when the PlayerController.cs script is active and when TestMode.cs script is active (PlayerController.cs is deactivated) as methods can be accessed from deactivated scripts. When the test mode is active, this method disables all running coroutines and starts them again for the new level and saves the current ruleset to an Excel document. The timer GameObject on the LevelCanvas is destroyed and a new level is loaded/created. This method loads a new scene causing a new level to be created when the LevelGenerator.cs script runs again and is used with human player playthroughs and automated test runs.
+
+**ResetPlayer() (Lines 100-107)**
+
+Only available when the PlayerController.cs script is enabled (a human is playing the game), if the player falls into a gap that they cannot jump out of and they do not naturally fall out of the level bounds, the 'R' key can be used to reset the player to the beginning of the level. This is considered a failed level and will reset the time survived on the timer as well as generating new level terrain.
+
+**Update() (Lines 109-119)**
+
+During each frame, checks are made for horizontal and jump movements input by the player, in addition to whether the character is in contact with the ground, if the reset key has been pressed or if the character has fallen outside of the level bounds and the level should be restarted.
+
+### **PlayerSetup.cs**
+
+**Awake() (Lines 19-37)**
+
+Ensures persistence with a singleton pattern to restrict the number of instances of the PlayerSetup.cs script to a single instance and a single PlayerCharacter GameObject. The collision mode for the character Rigidbody is set to continuous so that entering the trigger to complete the level at the end will only register once, preventing multiple increases to the counter of completed tests (which was also affected by a bug causing the duplication of the character Rigidbody). The jagged array testRuleList for storing and loading the rulesets is also initialised here so that it is available to be used before the Start() method in LevelGenerator.cs.
+
+**ActivateTest() (Lines 39-56)**
+
+The TestMode.cs and AI script is activated by pressing the 'T' key which deactivates the PlayerController.cs script giving control to the automated test character. The current number of tests is initialised to zero with the testCount variable 
+
 
