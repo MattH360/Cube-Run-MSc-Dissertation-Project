@@ -152,6 +152,34 @@ Ensures persistence with a singleton pattern to restrict the number of instances
 
 **ActivateTest() (Lines 39-56)**
 
-The TestMode.cs and AI script is activated by pressing the 'T' key which deactivates the PlayerController.cs script giving control to the automated test character. The current number of tests is initialised to zero with the testCount variable 
+The TestMode.cs and AIPathfinding.cs scripts are activated by pressing the 'T' key, which deactivates the PlayerController.cs script giving control to the automated test character. The current number of tests is initialised to zero with the testCount variable and the coroutines for recalculating the pathfinding route and for logging the distance travelled by the automated character are started.
+
+**Update() (Lines 59-62)**
+
+Checks for the activation of the test mode each frame to give an immediate response if the 'T' key is pressed.
+
+### **SurvivalTimer.cs**
+
+**Start() (Lines 20-23)**
+
+Accesses the Text component on the TimerText GameObject within the LevelCanvas so allow alterations to be made to the displayed time within the scene.
+
+**Update() (Lines 25-41)**
+
+The current time is continuously incremented by the time since the last frame and this is transferred to a readable format "00:00:00" with the use of Mathf.Floor to keep whole numbers and modulus to ensure the counter moves from 59 seconds to 1 minute (00:00:59 to 00:01:00) as a stopwatch would, instead of 60 seconds. The string format "00" also allows the numbers 0-9 to have leading zeros (e.g. 00:00:09). This new time is output the to Text component on the LevelCanvas so that it can be viewed in the scene.
+
+### **TestMode.cs**
+
+**Start() (Lines 34-44)**
+
+Access required GameObjects and variables for level dimensions and the character spawn position for distance calculations. Arrays to hold the distances reached by the automated character and the distance as a percentage of the full level are also initialised.
+
+**StoreRulesets() (Lines 46-75)**
+
+This public method is used by other scripts to iterate through the saved testRuleList  array and write each entry of the array to a line in a CSV style Excel document with headings for the rule number, cell number and cell coordinates. A message to notify the user that the ruleset have been saved sucessfully is also included and any exceptions (errors) are output to the unity console. The ruleset file was stored within the TestFiles folder within the assests of the Unity project after the first level restart for a given test batch of a ruleset.
+
+**CreateResultsFile() (Lines 77-99)**
+
+Utilises the same process as StoreRulesets() but uses the arrays for distances travelled by the automated test character and the level percentages completed. At the end of a full batch of tests for a ruleset the data is output to a CSV file format. The CSV files were changed to standard Excel documents for ease of use and readability when marking.  
 
 
