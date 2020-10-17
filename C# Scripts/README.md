@@ -176,10 +176,28 @@ Access required GameObjects and variables for level dimensions and the character
 
 **StoreRulesets() (Lines 46-75)**
 
-This public method is used by other scripts to iterate through the saved testRuleList  array and write each entry of the array to a line in a CSV style Excel document with headings for the rule number, cell number and cell coordinates. A message to notify the user that the ruleset have been saved sucessfully is also included and any exceptions (errors) are output to the unity console. The ruleset file was stored within the TestFiles folder within the assests of the Unity project after the first level restart for a given test batch of a ruleset.
+This public method is used within the RestartLevel() method in the PlayerController.cs script to iterate through the saved testRuleList  array and write each entry of the array to a line in a CSV style Excel document with headings for the rule number, cell number and cell coordinates. A message to notify the user that the ruleset have been saved sucessfully is also included and any exceptions (errors) are output to the unity console. The ruleset file is stored within the TestFiles folder within the assests of the Unity project after the first level restart for a given test batch of a ruleset.
 
 **CreateResultsFile() (Lines 77-99)**
 
-Utilises the same process as StoreRulesets() but uses the arrays for distances travelled by the automated test character and the level percentages completed. At the end of a full batch of tests for a ruleset the data is output to a CSV file format. The CSV files were changed to standard Excel documents for ease of use and readability when marking.  
+Utilises the same process as StoreRulesets() but uses the arrays for distances travelled by the automated test character and the level percentages completed. At the end of each tested level for a ruleset the data is output to a CSV file format. The CSV files were changed to standard Excel documents for ease of use and readability when marking.   
 
+**DeactivateTest() (Lines 102-114)**
 
+The same key 'T' used to activate the test mode is also used to deactivate the mode. When deactivating, the coroutines are stopped and control is returned to the player by deactivating the AIPathfinding.cs and TestMode.cs scripts and activating PlayerController.cs. The test mode is deactivated last to allow the method to run fully.
+
+**LogDistanceTravelled() (Lines 116-140)**
+
+This public coroutine is started as part of the ActivateTest() method in PlayerSetup.cs and logs the distance the automated test character reaches for each of the test levels executed. The current position is checked followed by an interval of 10 seconds and then the new position is checked again, if there is no change in position or the character has fallen outside of the level, then the distance travelled from the spawn position and the percentage of the level completed are calculated and added to their respective arrays. This is considered as a completed test as the character is no longer moving and the number of completed tests (testCount) is incremented by 1. The level is then restarted using the RestartLevel() method.
+
+**Update() (Lines 142-155)**
+
+Each frame the method checks for deactivation of the test mode and if a full batch of tests is completed the results file is created coroutines are stopped and control is returned to the player. 
+
+**NOTE:** Each item of distance data is ammended to the same CSV file as the other distance data, as are the rulesets for the ruleset file (seen in the project documentation).
+
+### **TimerPersist.cs**
+
+**Start() (Lines 12-24)**
+
+The only purpose of this script is to use a singleton pattern to ensure timer persistence does not produce duplicates by removing any other instances of LevelCanvas (that contains the timer) when a new level is generated.
