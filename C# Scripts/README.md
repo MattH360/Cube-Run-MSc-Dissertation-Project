@@ -96,8 +96,32 @@ The LevelTilemap GameObject is accessed and used to apply a static Rigidbody2D t
 
 **ApplyCARules() (Lines 116-241)**
 
-The number of level iterations created by a single ruleset before generating a new set of rules is determined by the switchRuleCount variable stored in the persistent PlayerSetup.cs script. The variable is increased each time a level is generated until reaching the value maxTests (the maximum number of tests to be completed before changing the ruleset, 100 tests per set at the time of the dissertation project). A three-dimensional jagged array was used to represent each ruleset of 10 rules each containing at random 0-8 potential cells, with each cell represented as an x and y coordinate within a 3x3 Moore Neighbourhood grid surrounding a centre target cell. An additional jagged array of the same dimensions was used to store the generated ruleset in the PlayerSetup.cs script for use with multiple test iterations. The x and y coordinates for each cell within a rule were selected at random and checked to exclude the target cell [1,1] or any duplicate cells within the rule. In an attempt to prevent this cells were randomised again if any matches were found. After the first creation of a ruleset the stored set was loaded for each following test. 
+The number of level iterations created by a single ruleset before generating a new set of rules is determined by the switchRuleCount variable stored in the persistent PlayerSetup.cs script. The variable is increased each time a level is generated until reaching the value maxTests (the maximum number of tests to be completed before changing the ruleset, 100 tests per set at the time of the dissertation project). A three-dimensional jagged array was used to represent each ruleset of 10 rules each containing at random 0-8 potential cells, with each cell represented as an x and y coordinate within a 3x3 Moore Neighbourhood grid surrounding a centre target cell. An additional jagged array of the same dimensions was used to store the generated ruleset in the PlayerSetup.cs script for use with multiple test iterations. The x and y coordinates for each cell within a rule were selected at random and checked to exclude the target cell [1,1] or any duplicate cells within the rule. In an attempt to prevent this cells were randomised again with the CalculateCells() method if any matches were found. After the first creation of a ruleset the stored set was loaded for each following test. To apply the created rules, each tile within the bottom half of the level was iterated through and a More Neighbourhood grid was inspected surrounding each tile at the centre target to check for matching configurations of the created rules using the CheckEachRule() method.
 
-To apply the created rules, each tile within the bottom half of the level was iterated through and a More Neighbourhood grid was inspected surrounding each tile at the centre target. As a rule can contain zero cells (i.e. all tiles surrounding the centre tile are white background tiles and not platforms) this is checked first, setting a boolean check value to true after checking each cell if they are background tiles and false if a platform tile is detected, the method then exits and checks the next rule in this case. If all cells are background and the boolean is true, then the centre tile is either changed or left in its current state at random. The same process is applied to test for the configurations of rules that contain 1-8 cells 
+**CalculateCells() (Lines 243-250)**
+
+This method simply generates a randomised x and y coordinate each between 0 and 2 to represent a position within a 3x3 Moore Neighbourhood grid. Required parameters are passed to the method to allow the use of previously defined variables.
+
+**CheckEachRule() (Lines 252-348)**
+
+As a rule can contain zero cells (i.e. all tiles surrounding the centre tile are white background tiles and not platforms) this is checked first, setting a boolean check value to true after checking each cell if they are background tiles and false if a platform tile is detected, the method then exits and checks the next rule in this case. If all cells are background and the boolean is true, then the centre tile is either changed or left in its current state at random. The same process is applied to test for the configurations of rules that contain 1-8 cells, each platform position within a rule is checked against each tile surrounding the target cell in the level scene, in addition to checking the position of background tiles within a rule to identify an exact match. After a match is identified the next tile in the level is tested, if an exact match is not found, the next rule is checked for the current tile.
+
+**SpawnPlayer() (Lines 350-358)**
+
+This method sets the transform position of the PlayerCharacter GameObject to a defined starting position, and sets the Unity layer for the character so that it have be seen on top of all other layers.
+
+### **PlayerController.cs**
+
+**Start() (Lines 27-37)**
+
+Access components and GameObjects for later use, in addition to preventing rigidbody rotation (to prevent the character from spinning when hitting the corner of a platform) and initialising a variable to represent the position for the OverlapCircle in the CheckGround() method.
+
+**HorizontalMovement() (Lines 39-52)**
+
+A simple method to translate user input from key presses to x-axis movement, the right arrow key to move in the positive x direction (right) and the left arrow key for negative movement (left).
+
+**JumpMovement() (Lines 54-62)**
+
+Enables the character to jump when in contact with a platform and the spacebar key is pressed. GetKeyDown only returns true when the key is pressed (holding the key has no effect) it is used to prevent continuous upward jumping movement if the spacebar is held down. GetKey used for horizontal movement allows the player to hold the arrow keys for continuous movement.
 
 
